@@ -5,6 +5,7 @@
     #include "compiler_hw_common.h" //Extern variables that communicate with lex
     #include "mySymbolTable.h"
     #include "myCodeGen.h"
+    #include "mySwitch.h"
     // #define YYDEBUG 1
     // int yydebug = 1;
     char* free_cat(char*a,char*b){
@@ -61,6 +62,8 @@
     unsigned char type;
     int label;
     struct forloop_node for_labels;
+    struct case_node case_data;
+    struct switch_node switch_data;
     /* ... */
 }
 
@@ -80,12 +83,15 @@
 %token <bool_lit> BOOL_LIT
 %token <name> IDENT
 
-%type <type> expr fac term int_lit float_lit bool_lit equ_expr cmp_expr land_expr lor_expr string_lit ident case_lit dec_assign
+%type <type> expr fac term int_lit float_lit bool_lit equ_expr cmp_expr land_expr lor_expr string_lit ident dec_assign
 %type <type> type nonvoid_type exprable_type
 %type <func_sig> paradec paradecs paradecstart
 %type <name> funchead
 %type <label> for ifbody
 %type <for_labels> forbody
+%type <case_data> casebody defaultbody
+%type <switch_data> switchhalfblock
+%type <int_lit> case_lit
 
 %start Program
 
@@ -262,17 +268,43 @@ ifbody
 ;
 casebody
     : CASE case_lit ':' {
+        $$.key=$2;
+        $$.label=label_cnt++;
+        $$.isdefault=false;
+        $$.next=NULL;
+        LABELGEN($$.label);
         create_symbol();
     }
 ;
 defaultbody
     : DEFAULT ':' {
+        $$.label=label_cnt++;
+        $$.isdefault=true;
+        $$.next=NULL;
+        LABELGEN($$.label);
         create_symbol();
     }
 ;
-switchbody
-    : SWITCH lor_expr {
-        create_symbol();
+switchhalfblock
+    : SWITCH lor_expr '{' newlines {
+        $$.enter_label=label_cnt++;
+        $$.exit_label=label_cnt++;
+        $$.first=NULL;
+        CODEGEN("goto Label%d\n",$$.enter_label);
+    }
+    | switchhalfblock casebody newlines '{' lines '}' newlines {
+        struct case_node* newnode=casedup($2);
+        newnode->next=$$.first;
+        $$.first=newnode;
+        CODEGEN("goto Label%d\n",$1.exit_label);
+        dump_symbol();
+    }
+    | switchhalfblock defaultbody newlines '{' lines '}' newlines {
+        struct case_node* newnode=casedup($2);
+        newnode->next=$$.first;
+        $$.first=newnode;
+        CODEGEN("goto Label%d\n",$1.exit_label);
+        dump_symbol();
     }
 ;
 line
@@ -350,14 +382,8 @@ line
         LABELGEN($1.out);
         dump_symbol();
     }
-    | casebody newlines '{' lines '}' {
-        dump_symbol();
-    }
-    | defaultbody newlines '{' lines '}' {
-        dump_symbol();
-    }
-    | switchbody newlines '{' lines '}' {
-        dump_symbol();
+    | switchhalfblock '}' {
+        my_lookupswitch($1);
     }
     | RETURN lor_expr {
         switch($2){
@@ -596,19 +622,10 @@ fac
 ;
 case_lit
     : INT_LIT {
-        printf("case %d\n",$1);
-    }
-    | FLOAT_LIT { 
-        printf("case %f\n",$1);
-    }
-    | '"' STRING_LIT '"' { 
-        printf("case %s\n",$2);
+        $$=$1;
     }
     | '-' INT_LIT {
-        printf("case %d\n",-$2);
-    }
-    | '-' FLOAT_LIT {
-        printf("case %f\n",-$2);
+        $$=-$2;
     }
 ;
 

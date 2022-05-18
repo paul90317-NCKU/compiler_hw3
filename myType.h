@@ -3,6 +3,13 @@
 
 #include "compiler_hw_common.h"
 
+#define type_b 1
+#define type_i 2
+#define type_f 4
+#define type_s 8
+#define type_error 16
+#define type_void 32
+
 static char buf[100];
 void get_type_tobuf(unsigned char type){
     switch(type){

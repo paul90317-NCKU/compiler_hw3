@@ -4,6 +4,19 @@
 #include "compiler_hw_common.h"
 #include "myType.h"
 
+struct symbol_node{
+    char* name;
+    unsigned char type;
+    int lineno;
+    int addr;
+};
+struct func_node{
+    char* name;
+    unsigned char type;
+    int lineno;
+    char *func_sig;
+};
+
 struct symbol_node symbol_table[1000];
 int scope_level=-1;//next is 0
 int scope_level_stack_init[1000]={0};
