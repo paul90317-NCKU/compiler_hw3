@@ -99,7 +99,7 @@ void print_post(unsigned char ptype){
 unsigned char myload(char* name){
     int ad=symbol_find(name);
     if(ad==-1){
-        printf("error:%d: undefined: %s\n",yylineno,name);
+        printf("error:%d: undefined: %s\n",reduce_line,name);
         return type_error;
     }
     struct symbol_node* s=symbol_table+ad;
@@ -120,7 +120,7 @@ unsigned char myload(char* name){
 void mystore(char* name){
     int ad=symbol_find(name);
     if(ad==-1){
-        printf("error:%d: undefined: %s\n",yylineno,name);
+        printf("error:%d: undefined: %s\n",reduce_line,name);
         return;
     }
     struct symbol_node* s=symbol_table+ad;

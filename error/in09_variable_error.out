@@ -1,0 +1,6 @@
+error:7: x redeclared in this block. previous declaration at line 4
+error:8: undefined: y
+error:8: invalid operation: ASSIGN (mismatched types ERROR and int32)
+error:10: z redeclared in this block. previous declaration at line 6
+error:12: undefined: gg
+error:11: invalid operation: GTR (mismatched types ERROR and int32)

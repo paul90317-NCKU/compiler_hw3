@@ -1,0 +1,12 @@
+error:6: invalid operation: ADD (mismatched types int32 and float32)
+error:7: invalid operation: SUB (mismatched types float32 and int32)
+error:8: invalid operation: ASSIGN (mismatched types int32 and float32)
+error:9: invalid operation: ADD (mismatched types int32 and float32)
+error:11: invalid operation: (operator REM not defined on float32)
+error:12: invalid operation: (operator REM not defined on float32)
+error:14: invalid operation: (operator LAND not defined on int32)
+error:15: invalid operation: (operator LOR not defined on int32)
+error:17: non-bool (type float32) used as for condition
+error:21: non-bool (type int32) used as for condition
+error:25: non-bool (type float32) used as for condition
+error:29: non-bool (type int32) used as for condition

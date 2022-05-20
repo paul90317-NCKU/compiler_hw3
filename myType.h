@@ -54,7 +54,7 @@ char get_type(unsigned char type){
 unsigned check_match(char *op,unsigned a,unsigned b){
     if(a==b)return a;
     get_type_tobuf(a);
-    printf("error:%d: invalid operation: %s (mismatched types %s ",yylineno,op,buf);
+    printf("error:%d: invalid operation: %s (mismatched types %s ",reduce_line,op,buf);
     g_has_error=true;
     get_type_tobuf(b);
     printf("and %s)\n",buf);
@@ -64,13 +64,13 @@ unsigned check_match(char *op,unsigned a,unsigned b){
 void check_bool_condition(unsigned char a){
     if(a==type_b)return;
     get_type_tobuf(a);
-    printf("error:%d: non-bool (type %s) used as for condition\n",yylineno,buf);
+    printf("error:%d: non-bool (type %s) used as for condition\n",reduce_line,buf);
     g_has_error=true;
 }
 bool check_type_define(char* op,unsigned char yourtype,unsigned char mask){
     if(yourtype&mask)return true;
     get_type_tobuf(yourtype);
-    printf("error:%d: invalid operation: (operator %s not defined on %s)\n",yylineno,op,buf);
+    printf("error:%d: invalid operation: (operator %s not defined on %s)\n",reduce_line,op,buf);
     g_has_error=true;
     return false;
 }

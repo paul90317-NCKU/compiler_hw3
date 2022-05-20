@@ -1,0 +1,5 @@
+error:7: x redeclared in this block. previous declaration at line 4
+error:8: invalid operation: ASSIGN (mismatched types ERROR and int32)
+error:8: undefined: y
+error:9: syntax error, unexpected ADD_ASSIGN, expecting '}'
+Total lines: 9

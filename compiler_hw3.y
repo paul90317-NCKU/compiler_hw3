@@ -6,8 +6,8 @@
     #include "mySymbolTable.h"
     #include "myCodeGen.h"
     #include "mySwitch.h"
-    // #define YYDEBUG 1
-    // int yydebug = 1;
+    //#define YYDEBUG 1
+    //int yydebug = 1;
     char* free_cat(char*a,char*b){
         int n=strlen(a)+strlen(b)+1;
         char* ret=malloc(n);
@@ -26,17 +26,14 @@
     extern int yylineno;
     extern int yylex();
     extern FILE *yyin;
+    int reduce_line=1;
 
     int yylex_destroy ();
     void yyerror (char const *s)
     {
-        printf("error:%d: %s\n", yylineno, s);
+        printf("error:%d: %s\n", reduce_line, s);
         g_has_error=true;
     }
-
-    extern int yylineno;
-    extern int yylex();
-    extern FILE *yyin;
 
     /* Used to generate code */
     /* As printf; the usage: CODEGEN("%d - %s\n", 100, "Hello world"); */
@@ -96,6 +93,11 @@
 %start Program
 
 %%
+newline
+    : NEWLINE {
+        reduce_line++;
+    }
+;
 for
     : FOR {
         $$=label_cnt++;
@@ -107,26 +109,33 @@ ident
     }
 ;
 Program
-    : lines
+    : newlines package methods {
+
+    }
+;
+package
+    : PACKAGE IDENT {
+        code_begin();
+    }
 ;
 
+methods
+    : method newline methods
+    | method
+;
+method
+    : funcbody newlines '{' lines '}' {
+        dump_symbol();
+        method_end();
+    } 
+    |
+;
 lines 
-    : line NEWLINE lines
+    : line newline lines
     | line
 ;
 newlines
-    : NEWLINE newlines
-    |
-;
-elsebody
-    : ELSE {
-        create_symbol();
-    }
-;
-elseblock
-    : elsebody newlines '{' lines '}' {
-        dump_symbol();
-    }
+    : newline newlines
     |
 ;
 int_lit
@@ -209,9 +218,9 @@ type
     }
 paradec
     : IDENT nonvoid_type {
-        yylineno++;
+        reduce_line++;
         insert_symbol($1,$2);
-        yylineno--;
+        reduce_line--;
         $$=cdup(get_type($2));
     }
 ;
@@ -223,13 +232,11 @@ funchead
 ;
 funcbody
     : funchead '(' paradecstart ')' type {
-        yylineno++;
         if(strcmp($1,"main")==0&&strcmp($3,"")==0&&$5==type_void){
             main_method_begin($1,$3,$5);
         }else{
             method_begin($1,$3,$5);
         }
-        yylineno--;
     }
 ;
 blockbody
@@ -250,17 +257,13 @@ forbody
         $$.again=$1;
         $$.out=label_cnt++;
         CODEGEN("ifeq Label%d\n",$$.out);
-        yylineno++;
         check_bool_condition($2);
-        yylineno--;
         create_symbol();
     }
 ;
 ifbody
     : IF lor_expr {
-        yylineno++;
         check_bool_condition($2);
-        yylineno--;
         $$=label_cnt++;
         CODEGEN("ifeq Label%d\n",$$);
         create_symbol();
@@ -308,11 +311,7 @@ switchhalfblock
     }
 ;
 line
-    : funcbody newlines '{' lines '}' {
-        dump_symbol();
-        method_end();
-    } 
-    | blockbody '{' lines '}' {
+    : blockbody '{' lines '}' {
         dump_symbol();
     }
     | equation
@@ -329,9 +328,7 @@ line
         mystore($2);
     }
     | VAR IDENT STRING '=' string_lit {
-        yylineno++;
         insert_symbol($2,type_s);
-        yylineno--;
         mystore($2);
     }
     | IDENT INC {
@@ -370,10 +367,7 @@ line
     | PRINT '(' string_lit ')' {
         print_post($3);
     }
-    | PACKAGE IDENT {
-        code_begin();
-    }
-    | ifbody newlines '{' lines '}' elseblock {
+    | ifbody newlines '{' lines '}' {
         LABELGEN($1);
         dump_symbol();
     }
@@ -603,7 +597,7 @@ fac
             $$=func_table[i].type;
             CODEGEN("invokestatic Main/%s(%s)%c\n",$1,func_table[i].func_sig,get_type($$));
         }else{
-            printf("error:%d: undefined: %s\n",yylineno,$1);
+            printf("error:%d: undefined: %s\n",reduce_line,$1);
             g_has_error=true;
         }
     }
@@ -658,7 +652,7 @@ int main(int argc, char *argv[])
     /* Symbol table dump */
     // Add your code
 
-	printf("Total lines: %d\n", yylineno);
+	printf("Total lines: %d\n", reduce_line-1);
     fclose(fout);
     fclose(yyin);
 

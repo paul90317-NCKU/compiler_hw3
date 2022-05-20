@@ -1,0 +1,2765 @@
+Terminals unused in grammar
+
+   ELSE
+
+
+Grammar
+
+    0 $accept: Program $end
+
+    1 newline: NEWLINE
+
+    2 for: FOR
+
+    3 ident: IDENT
+
+    4 Program: newlines package methods
+
+    5 package: PACKAGE IDENT
+
+    6 methods: method newline methods
+    7        | method
+
+    8 method: funcbody newlines '{' lines '}'
+    9       | %empty
+
+   10 lines: line newline lines
+   11      | line
+
+   12 newlines: newline newlines
+   13         | %empty
+
+   14 int_lit: INT_LIT
+
+   15 float_lit: FLOAT_LIT
+
+   16 bool_lit: BOOL_LIT
+
+   17 string_lit: '"' STRING_LIT '"'
+
+   18 parastart: paras
+   19          | %empty
+
+   20 paras: paras ',' lor_expr
+   21      | lor_expr
+
+   22 paradecstart: paradecs
+   23             | %empty
+
+   24 paradecs: paradecs ',' paradec
+   25         | paradec
+
+   26 exprable_type: INT
+   27              | FLOAT
+   28              | BOOL
+
+   29 nonvoid_type: exprable_type
+   30             | STRING
+
+   31 type: nonvoid_type
+   32     | %empty
+
+   33 paradec: IDENT nonvoid_type
+
+   34 funchead: FUNC IDENT
+
+   35 funcbody: funchead '(' paradecstart ')' type
+
+   36 blockbody: %empty
+
+   37 dec_assign: '=' lor_expr
+   38           | %empty
+
+   39 forbody: for lor_expr
+
+   40 ifbody: IF lor_expr
+
+   41 casebody: CASE case_lit ':'
+
+   42 defaultbody: DEFAULT ':'
+
+   43 switchhalfblock: SWITCH lor_expr '{' newlines
+   44                | switchhalfblock casebody newlines '{' lines '}' newlines
+   45                | switchhalfblock defaultbody newlines '{' lines '}' newlines
+
+   46 line: blockbody '{' lines '}'
+   47     | equation
+   48     | VAR IDENT exprable_type dec_assign
+   49     | VAR IDENT STRING
+   50     | VAR IDENT STRING '=' string_lit
+   51     | IDENT INC
+   52     | IDENT DEC
+   53     | PRINTLN '(' lor_expr ')'
+   54     | PRINTLN '(' string_lit ')'
+   55     | PRINT '(' lor_expr ')'
+   56     | PRINT '(' string_lit ')'
+   57     | ifbody newlines '{' lines '}'
+   58     | forbody newlines '{' lines '}'
+   59     | switchhalfblock '}'
+   60     | RETURN lor_expr
+   61     | RETURN string_lit
+   62     | RETURN
+   63     | %empty
+
+   64 equation: IDENT '=' lor_expr
+   65         | IDENT ADD_ASSIGN lor_expr
+   66         | IDENT SUB_ASSIGN lor_expr
+   67         | IDENT MUL_ASSIGN lor_expr
+   68         | IDENT QUO_ASSIGN lor_expr
+   69         | IDENT REM_ASSIGN lor_expr
+   70         | IDENT '=' string_lit
+   71         | lor_expr
+
+   72 lor_expr: lor_expr LOR land_expr
+   73         | land_expr
+
+   74 land_expr: land_expr LAND equ_expr
+   75          | equ_expr
+
+   76 equ_expr: equ_expr EQL cmp_expr
+   77         | cmp_expr
+
+   78 cmp_expr: cmp_expr '>' expr
+   79         | cmp_expr GEQ expr
+   80         | expr
+
+   81 expr: expr '+' term
+   82     | expr '-' term
+   83     | term
+
+   84 term: term '*' fac
+   85     | term '/' fac
+   86     | term '%' fac
+   87     | fac
+
+   88 fac: '+' fac
+   89    | '-' fac
+   90    | '!' fac
+   91    | '(' lor_expr ')'
+   92    | FLOAT '(' lor_expr ')'
+   93    | INT '(' lor_expr ')'
+   94    | IDENT '(' parastart ')'
+   95    | ident
+   96    | int_lit
+   97    | float_lit
+   98    | bool_lit
+
+   99 case_lit: INT_LIT
+  100         | '-' INT_LIT
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'!' (33) 90
+'"' (34) 17
+'%' (37) 86
+'(' (40) 35 53 54 55 56 91 92 93 94
+')' (41) 35 53 54 55 56 91 92 93 94
+'*' (42) 84
+'+' (43) 81 88
+',' (44) 20 24
+'-' (45) 82 89 100
+'/' (47) 85
+':' (58) 41 42
+'=' (61) 37 50 64 70
+'>' (62) 78
+'{' (123) 8 43 44 45 46 57 58
+'}' (125) 8 44 45 46 57 58 59
+error (256)
+VAR (258) 48 49 50
+NEWLINE (259) 1
+INT (260) 26 93
+FLOAT (261) 27 92
+BOOL (262) 28
+STRING (263) 30 49 50
+INC (264) 51
+DEC (265) 52
+GEQ (266) 79
+LOR (267) 72
+LAND (268) 74
+EQL (269) 76
+ADD_ASSIGN (270) 65
+SUB_ASSIGN (271) 66
+QUO_ASSIGN (272) 68
+MUL_ASSIGN (273) 67
+REM_ASSIGN (274) 69
+IF (275) 40
+ELSE (276)
+FOR (277) 2
+SWITCH (278) 43
+CASE (279) 41
+DEFAULT (280) 42
+PRINTLN (281) 53 54
+PACKAGE (282) 5
+FUNC (283) 34
+PRINT (284) 55 56
+RETURN (285) 60 61 62
+INT_LIT (286) 14 99 100
+FLOAT_LIT (287) 15
+STRING_LIT (288) 17
+BOOL_LIT (289) 16
+IDENT (290) 3 5 33 34 48 49 50 51 52 64 65 66 67 68 69 70 94
+
+
+Nonterminals, with rules where they appear
+
+$accept (51)
+    on left: 0
+newline (52)
+    on left: 1, on right: 6 10 12
+for (53)
+    on left: 2, on right: 39
+ident (54)
+    on left: 3, on right: 95
+Program (55)
+    on left: 4, on right: 0
+package (56)
+    on left: 5, on right: 4
+methods (57)
+    on left: 6 7, on right: 4 6
+method (58)
+    on left: 8 9, on right: 6 7
+lines (59)
+    on left: 10 11, on right: 8 10 44 45 46 57 58
+newlines (60)
+    on left: 12 13, on right: 4 8 12 43 44 45 57 58
+int_lit (61)
+    on left: 14, on right: 96
+float_lit (62)
+    on left: 15, on right: 97
+bool_lit (63)
+    on left: 16, on right: 98
+string_lit (64)
+    on left: 17, on right: 50 54 56 61 70
+parastart (65)
+    on left: 18 19, on right: 94
+paras (66)
+    on left: 20 21, on right: 18 20
+paradecstart (67)
+    on left: 22 23, on right: 35
+paradecs (68)
+    on left: 24 25, on right: 22 24
+exprable_type (69)
+    on left: 26 27 28, on right: 29 48
+nonvoid_type (70)
+    on left: 29 30, on right: 31 33
+type (71)
+    on left: 31 32, on right: 35
+paradec (72)
+    on left: 33, on right: 24 25
+funchead (73)
+    on left: 34, on right: 35
+funcbody (74)
+    on left: 35, on right: 8
+blockbody (75)
+    on left: 36, on right: 46
+dec_assign (76)
+    on left: 37 38, on right: 48
+forbody (77)
+    on left: 39, on right: 58
+ifbody (78)
+    on left: 40, on right: 57
+casebody (79)
+    on left: 41, on right: 44
+defaultbody (80)
+    on left: 42, on right: 45
+switchhalfblock (81)
+    on left: 43 44 45, on right: 44 45 59
+line (82)
+    on left: 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63,
+    on right: 10 11
+equation (83)
+    on left: 64 65 66 67 68 69 70 71, on right: 47
+lor_expr (84)
+    on left: 72 73, on right: 20 21 37 39 40 43 53 55 60 64 65 66 67
+    68 69 71 72 91 92 93
+land_expr (85)
+    on left: 74 75, on right: 72 73 74
+equ_expr (86)
+    on left: 76 77, on right: 74 75 76
+cmp_expr (87)
+    on left: 78 79 80, on right: 76 77 78 79
+expr (88)
+    on left: 81 82 83, on right: 78 79 80 81 82
+term (89)
+    on left: 84 85 86 87, on right: 81 82 83 84 85 86
+fac (90)
+    on left: 88 89 90 91 92 93 94 95 96 97 98, on right: 84 85 86 87
+    88 89 90
+case_lit (91)
+    on left: 99 100, on right: 41
+
+
+State 0
+
+    0 $accept: . Program $end
+
+    NEWLINE  shift, and go to state 1
+
+    $default  reduce using rule 13 (newlines)
+
+    newline   go to state 2
+    Program   go to state 3
+    newlines  go to state 4
+
+
+State 1
+
+    1 newline: NEWLINE .
+
+    $default  reduce using rule 1 (newline)
+
+
+State 2
+
+   12 newlines: newline . newlines
+
+    NEWLINE  shift, and go to state 1
+
+    $default  reduce using rule 13 (newlines)
+
+    newline   go to state 2
+    newlines  go to state 5
+
+
+State 3
+
+    0 $accept: Program . $end
+
+    $end  shift, and go to state 6
+
+
+State 4
+
+    4 Program: newlines . package methods
+
+    PACKAGE  shift, and go to state 7
+
+    package  go to state 8
+
+
+State 5
+
+   12 newlines: newline newlines .
+
+    $default  reduce using rule 12 (newlines)
+
+
+State 6
+
+    0 $accept: Program $end .
+
+    $default  accept
+
+
+State 7
+
+    5 package: PACKAGE . IDENT
+
+    IDENT  shift, and go to state 9
+
+
+State 8
+
+    4 Program: newlines package . methods
+
+    FUNC  shift, and go to state 10
+
+    $default  reduce using rule 9 (method)
+
+    methods   go to state 11
+    method    go to state 12
+    funchead  go to state 13
+    funcbody  go to state 14
+
+
+State 9
+
+    5 package: PACKAGE IDENT .
+
+    $default  reduce using rule 5 (package)
+
+
+State 10
+
+   34 funchead: FUNC . IDENT
+
+    IDENT  shift, and go to state 15
+
+
+State 11
+
+    4 Program: newlines package methods .
+
+    $default  reduce using rule 4 (Program)
+
+
+State 12
+
+    6 methods: method . newline methods
+    7        | method .
+
+    NEWLINE  shift, and go to state 1
+
+    $default  reduce using rule 7 (methods)
+
+    newline  go to state 16
+
+
+State 13
+
+   35 funcbody: funchead . '(' paradecstart ')' type
+
+    '('  shift, and go to state 17
+
+
+State 14
+
+    8 method: funcbody . newlines '{' lines '}'
+
+    NEWLINE  shift, and go to state 1
+
+    $default  reduce using rule 13 (newlines)
+
+    newline   go to state 2
+    newlines  go to state 18
+
+
+State 15
+
+   34 funchead: FUNC IDENT .
+
+    $default  reduce using rule 34 (funchead)
+
+
+State 16
+
+    6 methods: method newline . methods
+
+    FUNC  shift, and go to state 10
+
+    $default  reduce using rule 9 (method)
+
+    methods   go to state 19
+    method    go to state 12
+    funchead  go to state 13
+    funcbody  go to state 14
+
+
+State 17
+
+   35 funcbody: funchead '(' . paradecstart ')' type
+
+    IDENT  shift, and go to state 20
+
+    $default  reduce using rule 23 (paradecstart)
+
+    paradecstart  go to state 21
+    paradecs      go to state 22
+    paradec       go to state 23
+
+
+State 18
+
+    8 method: funcbody newlines . '{' lines '}'
+
+    '{'  shift, and go to state 24
+
+
+State 19
+
+    6 methods: method newline methods .
+
+    $default  reduce using rule 6 (methods)
+
+
+State 20
+
+   33 paradec: IDENT . nonvoid_type
+
+    INT     shift, and go to state 25
+    FLOAT   shift, and go to state 26
+    BOOL    shift, and go to state 27
+    STRING  shift, and go to state 28
+
+    exprable_type  go to state 29
+    nonvoid_type   go to state 30
+
+
+State 21
+
+   35 funcbody: funchead '(' paradecstart . ')' type
+
+    ')'  shift, and go to state 31
+
+
+State 22
+
+   22 paradecstart: paradecs .
+   24 paradecs: paradecs . ',' paradec
+
+    ','  shift, and go to state 32
+
+    $default  reduce using rule 22 (paradecstart)
+
+
+State 23
+
+   25 paradecs: paradec .
+
+    $default  reduce using rule 25 (paradecs)
+
+
+State 24
+
+    8 method: funcbody newlines '{' . lines '}'
+
+    VAR        shift, and go to state 33
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    IF         shift, and go to state 36
+    FOR        shift, and go to state 37
+    SWITCH     shift, and go to state 38
+    PRINTLN    shift, and go to state 39
+    PRINT      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 45
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    '{'       reduce using rule 36 (blockbody)
+    $default  reduce using rule 63 (line)
+
+    for              go to state 50
+    ident            go to state 51
+    lines            go to state 52
+    int_lit          go to state 53
+    float_lit        go to state 54
+    bool_lit         go to state 55
+    blockbody        go to state 56
+    forbody          go to state 57
+    ifbody           go to state 58
+    switchhalfblock  go to state 59
+    line             go to state 60
+    equation         go to state 61
+    lor_expr         go to state 62
+    land_expr        go to state 63
+    equ_expr         go to state 64
+    cmp_expr         go to state 65
+    expr             go to state 66
+    term             go to state 67
+    fac              go to state 68
+
+
+State 25
+
+   26 exprable_type: INT .
+
+    $default  reduce using rule 26 (exprable_type)
+
+
+State 26
+
+   27 exprable_type: FLOAT .
+
+    $default  reduce using rule 27 (exprable_type)
+
+
+State 27
+
+   28 exprable_type: BOOL .
+
+    $default  reduce using rule 28 (exprable_type)
+
+
+State 28
+
+   30 nonvoid_type: STRING .
+
+    $default  reduce using rule 30 (nonvoid_type)
+
+
+State 29
+
+   29 nonvoid_type: exprable_type .
+
+    $default  reduce using rule 29 (nonvoid_type)
+
+
+State 30
+
+   33 paradec: IDENT nonvoid_type .
+
+    $default  reduce using rule 33 (paradec)
+
+
+State 31
+
+   35 funcbody: funchead '(' paradecstart ')' . type
+
+    INT     shift, and go to state 25
+    FLOAT   shift, and go to state 26
+    BOOL    shift, and go to state 27
+    STRING  shift, and go to state 28
+
+    $default  reduce using rule 32 (type)
+
+    exprable_type  go to state 29
+    nonvoid_type   go to state 69
+    type           go to state 70
+
+
+State 32
+
+   24 paradecs: paradecs ',' . paradec
+
+    IDENT  shift, and go to state 20
+
+    paradec  go to state 71
+
+
+State 33
+
+   48 line: VAR . IDENT exprable_type dec_assign
+   49     | VAR . IDENT STRING
+   50     | VAR . IDENT STRING '=' string_lit
+
+    IDENT  shift, and go to state 72
+
+
+State 34
+
+   93 fac: INT . '(' lor_expr ')'
+
+    '('  shift, and go to state 73
+
+
+State 35
+
+   92 fac: FLOAT . '(' lor_expr ')'
+
+    '('  shift, and go to state 74
+
+
+State 36
+
+   40 ifbody: IF . lor_expr
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    lor_expr   go to state 76
+    land_expr  go to state 63
+    equ_expr   go to state 64
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 37
+
+    2 for: FOR .
+
+    $default  reduce using rule 2 (for)
+
+
+State 38
+
+   43 switchhalfblock: SWITCH . lor_expr '{' newlines
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    lor_expr   go to state 77
+    land_expr  go to state 63
+    equ_expr   go to state 64
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 39
+
+   53 line: PRINTLN . '(' lor_expr ')'
+   54     | PRINTLN . '(' string_lit ')'
+
+    '('  shift, and go to state 78
+
+
+State 40
+
+   55 line: PRINT . '(' lor_expr ')'
+   56     | PRINT . '(' string_lit ')'
+
+    '('  shift, and go to state 79
+
+
+State 41
+
+   60 line: RETURN . lor_expr
+   61     | RETURN . string_lit
+   62     | RETURN .
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '"'        shift, and go to state 80
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    $default  reduce using rule 62 (line)
+
+    ident       go to state 51
+    int_lit     go to state 53
+    float_lit   go to state 54
+    bool_lit    go to state 55
+    string_lit  go to state 81
+    lor_expr    go to state 82
+    land_expr   go to state 63
+    equ_expr    go to state 64
+    cmp_expr    go to state 65
+    expr        go to state 66
+    term        go to state 67
+    fac         go to state 68
+
+
+State 42
+
+   14 int_lit: INT_LIT .
+
+    $default  reduce using rule 14 (int_lit)
+
+
+State 43
+
+   15 float_lit: FLOAT_LIT .
+
+    $default  reduce using rule 15 (float_lit)
+
+
+State 44
+
+   16 bool_lit: BOOL_LIT .
+
+    $default  reduce using rule 16 (bool_lit)
+
+
+State 45
+
+    3 ident: IDENT .
+   51 line: IDENT . INC
+   52     | IDENT . DEC
+   64 equation: IDENT . '=' lor_expr
+   65         | IDENT . ADD_ASSIGN lor_expr
+   66         | IDENT . SUB_ASSIGN lor_expr
+   67         | IDENT . MUL_ASSIGN lor_expr
+   68         | IDENT . QUO_ASSIGN lor_expr
+   69         | IDENT . REM_ASSIGN lor_expr
+   70         | IDENT . '=' string_lit
+   94 fac: IDENT . '(' parastart ')'
+
+    INC         shift, and go to state 83
+    DEC         shift, and go to state 84
+    ADD_ASSIGN  shift, and go to state 85
+    SUB_ASSIGN  shift, and go to state 86
+    QUO_ASSIGN  shift, and go to state 87
+    MUL_ASSIGN  shift, and go to state 88
+    REM_ASSIGN  shift, and go to state 89
+    '('         shift, and go to state 90
+    '='         shift, and go to state 91
+
+    $default  reduce using rule 3 (ident)
+
+
+State 46
+
+   91 fac: '(' . lor_expr ')'
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    lor_expr   go to state 92
+    land_expr  go to state 63
+    equ_expr   go to state 64
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 47
+
+   88 fac: '+' . fac
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    fac        go to state 93
+
+
+State 48
+
+   89 fac: '-' . fac
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    fac        go to state 94
+
+
+State 49
+
+   90 fac: '!' . fac
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    fac        go to state 95
+
+
+State 50
+
+   39 forbody: for . lor_expr
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    lor_expr   go to state 96
+    land_expr  go to state 63
+    equ_expr   go to state 64
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 51
+
+   95 fac: ident .
+
+    $default  reduce using rule 95 (fac)
+
+
+State 52
+
+    8 method: funcbody newlines '{' lines . '}'
+
+    '}'  shift, and go to state 97
+
+
+State 53
+
+   96 fac: int_lit .
+
+    $default  reduce using rule 96 (fac)
+
+
+State 54
+
+   97 fac: float_lit .
+
+    $default  reduce using rule 97 (fac)
+
+
+State 55
+
+   98 fac: bool_lit .
+
+    $default  reduce using rule 98 (fac)
+
+
+State 56
+
+   46 line: blockbody . '{' lines '}'
+
+    '{'  shift, and go to state 98
+
+
+State 57
+
+   58 line: forbody . newlines '{' lines '}'
+
+    NEWLINE  shift, and go to state 1
+
+    $default  reduce using rule 13 (newlines)
+
+    newline   go to state 2
+    newlines  go to state 99
+
+
+State 58
+
+   57 line: ifbody . newlines '{' lines '}'
+
+    NEWLINE  shift, and go to state 1
+
+    $default  reduce using rule 13 (newlines)
+
+    newline   go to state 2
+    newlines  go to state 100
+
+
+State 59
+
+   44 switchhalfblock: switchhalfblock . casebody newlines '{' lines '}' newlines
+   45                | switchhalfblock . defaultbody newlines '{' lines '}' newlines
+   59 line: switchhalfblock . '}'
+
+    CASE     shift, and go to state 101
+    DEFAULT  shift, and go to state 102
+    '}'      shift, and go to state 103
+
+    casebody     go to state 104
+    defaultbody  go to state 105
+
+
+State 60
+
+   10 lines: line . newline lines
+   11      | line .
+
+    NEWLINE  shift, and go to state 1
+
+    $default  reduce using rule 11 (lines)
+
+    newline  go to state 106
+
+
+State 61
+
+   47 line: equation .
+
+    $default  reduce using rule 47 (line)
+
+
+State 62
+
+   71 equation: lor_expr .
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+
+    $default  reduce using rule 71 (equation)
+
+
+State 63
+
+   73 lor_expr: land_expr .
+   74 land_expr: land_expr . LAND equ_expr
+
+    LAND  shift, and go to state 108
+
+    $default  reduce using rule 73 (lor_expr)
+
+
+State 64
+
+   75 land_expr: equ_expr .
+   76 equ_expr: equ_expr . EQL cmp_expr
+
+    EQL  shift, and go to state 109
+
+    $default  reduce using rule 75 (land_expr)
+
+
+State 65
+
+   77 equ_expr: cmp_expr .
+   78 cmp_expr: cmp_expr . '>' expr
+   79         | cmp_expr . GEQ expr
+
+    GEQ  shift, and go to state 110
+    '>'  shift, and go to state 111
+
+    $default  reduce using rule 77 (equ_expr)
+
+
+State 66
+
+   80 cmp_expr: expr .
+   81 expr: expr . '+' term
+   82     | expr . '-' term
+
+    '+'  shift, and go to state 112
+    '-'  shift, and go to state 113
+
+    $default  reduce using rule 80 (cmp_expr)
+
+
+State 67
+
+   83 expr: term .
+   84 term: term . '*' fac
+   85     | term . '/' fac
+   86     | term . '%' fac
+
+    '*'  shift, and go to state 114
+    '/'  shift, and go to state 115
+    '%'  shift, and go to state 116
+
+    $default  reduce using rule 83 (expr)
+
+
+State 68
+
+   87 term: fac .
+
+    $default  reduce using rule 87 (term)
+
+
+State 69
+
+   31 type: nonvoid_type .
+
+    $default  reduce using rule 31 (type)
+
+
+State 70
+
+   35 funcbody: funchead '(' paradecstart ')' type .
+
+    $default  reduce using rule 35 (funcbody)
+
+
+State 71
+
+   24 paradecs: paradecs ',' paradec .
+
+    $default  reduce using rule 24 (paradecs)
+
+
+State 72
+
+   48 line: VAR IDENT . exprable_type dec_assign
+   49     | VAR IDENT . STRING
+   50     | VAR IDENT . STRING '=' string_lit
+
+    INT     shift, and go to state 25
+    FLOAT   shift, and go to state 26
+    BOOL    shift, and go to state 27
+    STRING  shift, and go to state 117
+
+    exprable_type  go to state 118
+
+
+State 73
+
+   93 fac: INT '(' . lor_expr ')'
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    lor_expr   go to state 119
+    land_expr  go to state 63
+    equ_expr   go to state 64
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 74
+
+   92 fac: FLOAT '(' . lor_expr ')'
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    lor_expr   go to state 120
+    land_expr  go to state 63
+    equ_expr   go to state 64
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 75
+
+    3 ident: IDENT .
+   94 fac: IDENT . '(' parastart ')'
+
+    '('  shift, and go to state 90
+
+    $default  reduce using rule 3 (ident)
+
+
+State 76
+
+   40 ifbody: IF lor_expr .
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+
+    $default  reduce using rule 40 (ifbody)
+
+
+State 77
+
+   43 switchhalfblock: SWITCH lor_expr . '{' newlines
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+    '{'  shift, and go to state 121
+
+
+State 78
+
+   53 line: PRINTLN '(' . lor_expr ')'
+   54     | PRINTLN '(' . string_lit ')'
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '"'        shift, and go to state 80
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident       go to state 51
+    int_lit     go to state 53
+    float_lit   go to state 54
+    bool_lit    go to state 55
+    string_lit  go to state 122
+    lor_expr    go to state 123
+    land_expr   go to state 63
+    equ_expr    go to state 64
+    cmp_expr    go to state 65
+    expr        go to state 66
+    term        go to state 67
+    fac         go to state 68
+
+
+State 79
+
+   55 line: PRINT '(' . lor_expr ')'
+   56     | PRINT '(' . string_lit ')'
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '"'        shift, and go to state 80
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident       go to state 51
+    int_lit     go to state 53
+    float_lit   go to state 54
+    bool_lit    go to state 55
+    string_lit  go to state 124
+    lor_expr    go to state 125
+    land_expr   go to state 63
+    equ_expr    go to state 64
+    cmp_expr    go to state 65
+    expr        go to state 66
+    term        go to state 67
+    fac         go to state 68
+
+
+State 80
+
+   17 string_lit: '"' . STRING_LIT '"'
+
+    STRING_LIT  shift, and go to state 126
+
+
+State 81
+
+   61 line: RETURN string_lit .
+
+    $default  reduce using rule 61 (line)
+
+
+State 82
+
+   60 line: RETURN lor_expr .
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+
+    $default  reduce using rule 60 (line)
+
+
+State 83
+
+   51 line: IDENT INC .
+
+    $default  reduce using rule 51 (line)
+
+
+State 84
+
+   52 line: IDENT DEC .
+
+    $default  reduce using rule 52 (line)
+
+
+State 85
+
+   65 equation: IDENT ADD_ASSIGN . lor_expr
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    lor_expr   go to state 127
+    land_expr  go to state 63
+    equ_expr   go to state 64
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 86
+
+   66 equation: IDENT SUB_ASSIGN . lor_expr
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    lor_expr   go to state 128
+    land_expr  go to state 63
+    equ_expr   go to state 64
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 87
+
+   68 equation: IDENT QUO_ASSIGN . lor_expr
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    lor_expr   go to state 129
+    land_expr  go to state 63
+    equ_expr   go to state 64
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 88
+
+   67 equation: IDENT MUL_ASSIGN . lor_expr
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    lor_expr   go to state 130
+    land_expr  go to state 63
+    equ_expr   go to state 64
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 89
+
+   69 equation: IDENT REM_ASSIGN . lor_expr
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    lor_expr   go to state 131
+    land_expr  go to state 63
+    equ_expr   go to state 64
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 90
+
+   94 fac: IDENT '(' . parastart ')'
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    $default  reduce using rule 19 (parastart)
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    parastart  go to state 132
+    paras      go to state 133
+    lor_expr   go to state 134
+    land_expr  go to state 63
+    equ_expr   go to state 64
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 91
+
+   64 equation: IDENT '=' . lor_expr
+   70         | IDENT '=' . string_lit
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '"'        shift, and go to state 80
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident       go to state 51
+    int_lit     go to state 53
+    float_lit   go to state 54
+    bool_lit    go to state 55
+    string_lit  go to state 135
+    lor_expr    go to state 136
+    land_expr   go to state 63
+    equ_expr    go to state 64
+    cmp_expr    go to state 65
+    expr        go to state 66
+    term        go to state 67
+    fac         go to state 68
+
+
+State 92
+
+   72 lor_expr: lor_expr . LOR land_expr
+   91 fac: '(' lor_expr . ')'
+
+    LOR  shift, and go to state 107
+    ')'  shift, and go to state 137
+
+
+State 93
+
+   88 fac: '+' fac .
+
+    $default  reduce using rule 88 (fac)
+
+
+State 94
+
+   89 fac: '-' fac .
+
+    $default  reduce using rule 89 (fac)
+
+
+State 95
+
+   90 fac: '!' fac .
+
+    $default  reduce using rule 90 (fac)
+
+
+State 96
+
+   39 forbody: for lor_expr .
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+
+    $default  reduce using rule 39 (forbody)
+
+
+State 97
+
+    8 method: funcbody newlines '{' lines '}' .
+
+    $default  reduce using rule 8 (method)
+
+
+State 98
+
+   46 line: blockbody '{' . lines '}'
+
+    VAR        shift, and go to state 33
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    IF         shift, and go to state 36
+    FOR        shift, and go to state 37
+    SWITCH     shift, and go to state 38
+    PRINTLN    shift, and go to state 39
+    PRINT      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 45
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    '{'       reduce using rule 36 (blockbody)
+    $default  reduce using rule 63 (line)
+
+    for              go to state 50
+    ident            go to state 51
+    lines            go to state 138
+    int_lit          go to state 53
+    float_lit        go to state 54
+    bool_lit         go to state 55
+    blockbody        go to state 56
+    forbody          go to state 57
+    ifbody           go to state 58
+    switchhalfblock  go to state 59
+    line             go to state 60
+    equation         go to state 61
+    lor_expr         go to state 62
+    land_expr        go to state 63
+    equ_expr         go to state 64
+    cmp_expr         go to state 65
+    expr             go to state 66
+    term             go to state 67
+    fac              go to state 68
+
+
+State 99
+
+   58 line: forbody newlines . '{' lines '}'
+
+    '{'  shift, and go to state 139
+
+
+State 100
+
+   57 line: ifbody newlines . '{' lines '}'
+
+    '{'  shift, and go to state 140
+
+
+State 101
+
+   41 casebody: CASE . case_lit ':'
+
+    INT_LIT  shift, and go to state 141
+    '-'      shift, and go to state 142
+
+    case_lit  go to state 143
+
+
+State 102
+
+   42 defaultbody: DEFAULT . ':'
+
+    ':'  shift, and go to state 144
+
+
+State 103
+
+   59 line: switchhalfblock '}' .
+
+    $default  reduce using rule 59 (line)
+
+
+State 104
+
+   44 switchhalfblock: switchhalfblock casebody . newlines '{' lines '}' newlines
+
+    NEWLINE  shift, and go to state 1
+
+    $default  reduce using rule 13 (newlines)
+
+    newline   go to state 2
+    newlines  go to state 145
+
+
+State 105
+
+   45 switchhalfblock: switchhalfblock defaultbody . newlines '{' lines '}' newlines
+
+    NEWLINE  shift, and go to state 1
+
+    $default  reduce using rule 13 (newlines)
+
+    newline   go to state 2
+    newlines  go to state 146
+
+
+State 106
+
+   10 lines: line newline . lines
+
+    VAR        shift, and go to state 33
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    IF         shift, and go to state 36
+    FOR        shift, and go to state 37
+    SWITCH     shift, and go to state 38
+    PRINTLN    shift, and go to state 39
+    PRINT      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 45
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    '{'       reduce using rule 36 (blockbody)
+    $default  reduce using rule 63 (line)
+
+    for              go to state 50
+    ident            go to state 51
+    lines            go to state 147
+    int_lit          go to state 53
+    float_lit        go to state 54
+    bool_lit         go to state 55
+    blockbody        go to state 56
+    forbody          go to state 57
+    ifbody           go to state 58
+    switchhalfblock  go to state 59
+    line             go to state 60
+    equation         go to state 61
+    lor_expr         go to state 62
+    land_expr        go to state 63
+    equ_expr         go to state 64
+    cmp_expr         go to state 65
+    expr             go to state 66
+    term             go to state 67
+    fac              go to state 68
+
+
+State 107
+
+   72 lor_expr: lor_expr LOR . land_expr
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    land_expr  go to state 148
+    equ_expr   go to state 64
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 108
+
+   74 land_expr: land_expr LAND . equ_expr
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    equ_expr   go to state 149
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 109
+
+   76 equ_expr: equ_expr EQL . cmp_expr
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    cmp_expr   go to state 150
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 110
+
+   79 cmp_expr: cmp_expr GEQ . expr
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    expr       go to state 151
+    term       go to state 67
+    fac        go to state 68
+
+
+State 111
+
+   78 cmp_expr: cmp_expr '>' . expr
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    expr       go to state 152
+    term       go to state 67
+    fac        go to state 68
+
+
+State 112
+
+   81 expr: expr '+' . term
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    term       go to state 153
+    fac        go to state 68
+
+
+State 113
+
+   82 expr: expr '-' . term
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    term       go to state 154
+    fac        go to state 68
+
+
+State 114
+
+   84 term: term '*' . fac
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    fac        go to state 155
+
+
+State 115
+
+   85 term: term '/' . fac
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    fac        go to state 156
+
+
+State 116
+
+   86 term: term '%' . fac
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    fac        go to state 157
+
+
+State 117
+
+   49 line: VAR IDENT STRING .
+   50     | VAR IDENT STRING . '=' string_lit
+
+    '='  shift, and go to state 158
+
+    $default  reduce using rule 49 (line)
+
+
+State 118
+
+   48 line: VAR IDENT exprable_type . dec_assign
+
+    '='  shift, and go to state 159
+
+    $default  reduce using rule 38 (dec_assign)
+
+    dec_assign  go to state 160
+
+
+State 119
+
+   72 lor_expr: lor_expr . LOR land_expr
+   93 fac: INT '(' lor_expr . ')'
+
+    LOR  shift, and go to state 107
+    ')'  shift, and go to state 161
+
+
+State 120
+
+   72 lor_expr: lor_expr . LOR land_expr
+   92 fac: FLOAT '(' lor_expr . ')'
+
+    LOR  shift, and go to state 107
+    ')'  shift, and go to state 162
+
+
+State 121
+
+   43 switchhalfblock: SWITCH lor_expr '{' . newlines
+
+    NEWLINE  shift, and go to state 1
+
+    $default  reduce using rule 13 (newlines)
+
+    newline   go to state 2
+    newlines  go to state 163
+
+
+State 122
+
+   54 line: PRINTLN '(' string_lit . ')'
+
+    ')'  shift, and go to state 164
+
+
+State 123
+
+   53 line: PRINTLN '(' lor_expr . ')'
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+    ')'  shift, and go to state 165
+
+
+State 124
+
+   56 line: PRINT '(' string_lit . ')'
+
+    ')'  shift, and go to state 166
+
+
+State 125
+
+   55 line: PRINT '(' lor_expr . ')'
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+    ')'  shift, and go to state 167
+
+
+State 126
+
+   17 string_lit: '"' STRING_LIT . '"'
+
+    '"'  shift, and go to state 168
+
+
+State 127
+
+   65 equation: IDENT ADD_ASSIGN lor_expr .
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+
+    $default  reduce using rule 65 (equation)
+
+
+State 128
+
+   66 equation: IDENT SUB_ASSIGN lor_expr .
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+
+    $default  reduce using rule 66 (equation)
+
+
+State 129
+
+   68 equation: IDENT QUO_ASSIGN lor_expr .
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+
+    $default  reduce using rule 68 (equation)
+
+
+State 130
+
+   67 equation: IDENT MUL_ASSIGN lor_expr .
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+
+    $default  reduce using rule 67 (equation)
+
+
+State 131
+
+   69 equation: IDENT REM_ASSIGN lor_expr .
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+
+    $default  reduce using rule 69 (equation)
+
+
+State 132
+
+   94 fac: IDENT '(' parastart . ')'
+
+    ')'  shift, and go to state 169
+
+
+State 133
+
+   18 parastart: paras .
+   20 paras: paras . ',' lor_expr
+
+    ','  shift, and go to state 170
+
+    $default  reduce using rule 18 (parastart)
+
+
+State 134
+
+   21 paras: lor_expr .
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+
+    $default  reduce using rule 21 (paras)
+
+
+State 135
+
+   70 equation: IDENT '=' string_lit .
+
+    $default  reduce using rule 70 (equation)
+
+
+State 136
+
+   64 equation: IDENT '=' lor_expr .
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+
+    $default  reduce using rule 64 (equation)
+
+
+State 137
+
+   91 fac: '(' lor_expr ')' .
+
+    $default  reduce using rule 91 (fac)
+
+
+State 138
+
+   46 line: blockbody '{' lines . '}'
+
+    '}'  shift, and go to state 171
+
+
+State 139
+
+   58 line: forbody newlines '{' . lines '}'
+
+    VAR        shift, and go to state 33
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    IF         shift, and go to state 36
+    FOR        shift, and go to state 37
+    SWITCH     shift, and go to state 38
+    PRINTLN    shift, and go to state 39
+    PRINT      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 45
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    '{'       reduce using rule 36 (blockbody)
+    $default  reduce using rule 63 (line)
+
+    for              go to state 50
+    ident            go to state 51
+    lines            go to state 172
+    int_lit          go to state 53
+    float_lit        go to state 54
+    bool_lit         go to state 55
+    blockbody        go to state 56
+    forbody          go to state 57
+    ifbody           go to state 58
+    switchhalfblock  go to state 59
+    line             go to state 60
+    equation         go to state 61
+    lor_expr         go to state 62
+    land_expr        go to state 63
+    equ_expr         go to state 64
+    cmp_expr         go to state 65
+    expr             go to state 66
+    term             go to state 67
+    fac              go to state 68
+
+
+State 140
+
+   57 line: ifbody newlines '{' . lines '}'
+
+    VAR        shift, and go to state 33
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    IF         shift, and go to state 36
+    FOR        shift, and go to state 37
+    SWITCH     shift, and go to state 38
+    PRINTLN    shift, and go to state 39
+    PRINT      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 45
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    '{'       reduce using rule 36 (blockbody)
+    $default  reduce using rule 63 (line)
+
+    for              go to state 50
+    ident            go to state 51
+    lines            go to state 173
+    int_lit          go to state 53
+    float_lit        go to state 54
+    bool_lit         go to state 55
+    blockbody        go to state 56
+    forbody          go to state 57
+    ifbody           go to state 58
+    switchhalfblock  go to state 59
+    line             go to state 60
+    equation         go to state 61
+    lor_expr         go to state 62
+    land_expr        go to state 63
+    equ_expr         go to state 64
+    cmp_expr         go to state 65
+    expr             go to state 66
+    term             go to state 67
+    fac              go to state 68
+
+
+State 141
+
+   99 case_lit: INT_LIT .
+
+    $default  reduce using rule 99 (case_lit)
+
+
+State 142
+
+  100 case_lit: '-' . INT_LIT
+
+    INT_LIT  shift, and go to state 174
+
+
+State 143
+
+   41 casebody: CASE case_lit . ':'
+
+    ':'  shift, and go to state 175
+
+
+State 144
+
+   42 defaultbody: DEFAULT ':' .
+
+    $default  reduce using rule 42 (defaultbody)
+
+
+State 145
+
+   44 switchhalfblock: switchhalfblock casebody newlines . '{' lines '}' newlines
+
+    '{'  shift, and go to state 176
+
+
+State 146
+
+   45 switchhalfblock: switchhalfblock defaultbody newlines . '{' lines '}' newlines
+
+    '{'  shift, and go to state 177
+
+
+State 147
+
+   10 lines: line newline lines .
+
+    $default  reduce using rule 10 (lines)
+
+
+State 148
+
+   72 lor_expr: lor_expr LOR land_expr .
+   74 land_expr: land_expr . LAND equ_expr
+
+    LAND  shift, and go to state 108
+
+    $default  reduce using rule 72 (lor_expr)
+
+
+State 149
+
+   74 land_expr: land_expr LAND equ_expr .
+   76 equ_expr: equ_expr . EQL cmp_expr
+
+    EQL  shift, and go to state 109
+
+    $default  reduce using rule 74 (land_expr)
+
+
+State 150
+
+   76 equ_expr: equ_expr EQL cmp_expr .
+   78 cmp_expr: cmp_expr . '>' expr
+   79         | cmp_expr . GEQ expr
+
+    GEQ  shift, and go to state 110
+    '>'  shift, and go to state 111
+
+    $default  reduce using rule 76 (equ_expr)
+
+
+State 151
+
+   79 cmp_expr: cmp_expr GEQ expr .
+   81 expr: expr . '+' term
+   82     | expr . '-' term
+
+    '+'  shift, and go to state 112
+    '-'  shift, and go to state 113
+
+    $default  reduce using rule 79 (cmp_expr)
+
+
+State 152
+
+   78 cmp_expr: cmp_expr '>' expr .
+   81 expr: expr . '+' term
+   82     | expr . '-' term
+
+    '+'  shift, and go to state 112
+    '-'  shift, and go to state 113
+
+    $default  reduce using rule 78 (cmp_expr)
+
+
+State 153
+
+   81 expr: expr '+' term .
+   84 term: term . '*' fac
+   85     | term . '/' fac
+   86     | term . '%' fac
+
+    '*'  shift, and go to state 114
+    '/'  shift, and go to state 115
+    '%'  shift, and go to state 116
+
+    $default  reduce using rule 81 (expr)
+
+
+State 154
+
+   82 expr: expr '-' term .
+   84 term: term . '*' fac
+   85     | term . '/' fac
+   86     | term . '%' fac
+
+    '*'  shift, and go to state 114
+    '/'  shift, and go to state 115
+    '%'  shift, and go to state 116
+
+    $default  reduce using rule 82 (expr)
+
+
+State 155
+
+   84 term: term '*' fac .
+
+    $default  reduce using rule 84 (term)
+
+
+State 156
+
+   85 term: term '/' fac .
+
+    $default  reduce using rule 85 (term)
+
+
+State 157
+
+   86 term: term '%' fac .
+
+    $default  reduce using rule 86 (term)
+
+
+State 158
+
+   50 line: VAR IDENT STRING '=' . string_lit
+
+    '"'  shift, and go to state 80
+
+    string_lit  go to state 178
+
+
+State 159
+
+   37 dec_assign: '=' . lor_expr
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    lor_expr   go to state 179
+    land_expr  go to state 63
+    equ_expr   go to state 64
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 160
+
+   48 line: VAR IDENT exprable_type dec_assign .
+
+    $default  reduce using rule 48 (line)
+
+
+State 161
+
+   93 fac: INT '(' lor_expr ')' .
+
+    $default  reduce using rule 93 (fac)
+
+
+State 162
+
+   92 fac: FLOAT '(' lor_expr ')' .
+
+    $default  reduce using rule 92 (fac)
+
+
+State 163
+
+   43 switchhalfblock: SWITCH lor_expr '{' newlines .
+
+    $default  reduce using rule 43 (switchhalfblock)
+
+
+State 164
+
+   54 line: PRINTLN '(' string_lit ')' .
+
+    $default  reduce using rule 54 (line)
+
+
+State 165
+
+   53 line: PRINTLN '(' lor_expr ')' .
+
+    $default  reduce using rule 53 (line)
+
+
+State 166
+
+   56 line: PRINT '(' string_lit ')' .
+
+    $default  reduce using rule 56 (line)
+
+
+State 167
+
+   55 line: PRINT '(' lor_expr ')' .
+
+    $default  reduce using rule 55 (line)
+
+
+State 168
+
+   17 string_lit: '"' STRING_LIT '"' .
+
+    $default  reduce using rule 17 (string_lit)
+
+
+State 169
+
+   94 fac: IDENT '(' parastart ')' .
+
+    $default  reduce using rule 94 (fac)
+
+
+State 170
+
+   20 paras: paras ',' . lor_expr
+
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 75
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    ident      go to state 51
+    int_lit    go to state 53
+    float_lit  go to state 54
+    bool_lit   go to state 55
+    lor_expr   go to state 180
+    land_expr  go to state 63
+    equ_expr   go to state 64
+    cmp_expr   go to state 65
+    expr       go to state 66
+    term       go to state 67
+    fac        go to state 68
+
+
+State 171
+
+   46 line: blockbody '{' lines '}' .
+
+    $default  reduce using rule 46 (line)
+
+
+State 172
+
+   58 line: forbody newlines '{' lines . '}'
+
+    '}'  shift, and go to state 181
+
+
+State 173
+
+   57 line: ifbody newlines '{' lines . '}'
+
+    '}'  shift, and go to state 182
+
+
+State 174
+
+  100 case_lit: '-' INT_LIT .
+
+    $default  reduce using rule 100 (case_lit)
+
+
+State 175
+
+   41 casebody: CASE case_lit ':' .
+
+    $default  reduce using rule 41 (casebody)
+
+
+State 176
+
+   44 switchhalfblock: switchhalfblock casebody newlines '{' . lines '}' newlines
+
+    VAR        shift, and go to state 33
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    IF         shift, and go to state 36
+    FOR        shift, and go to state 37
+    SWITCH     shift, and go to state 38
+    PRINTLN    shift, and go to state 39
+    PRINT      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 45
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    '{'       reduce using rule 36 (blockbody)
+    $default  reduce using rule 63 (line)
+
+    for              go to state 50
+    ident            go to state 51
+    lines            go to state 183
+    int_lit          go to state 53
+    float_lit        go to state 54
+    bool_lit         go to state 55
+    blockbody        go to state 56
+    forbody          go to state 57
+    ifbody           go to state 58
+    switchhalfblock  go to state 59
+    line             go to state 60
+    equation         go to state 61
+    lor_expr         go to state 62
+    land_expr        go to state 63
+    equ_expr         go to state 64
+    cmp_expr         go to state 65
+    expr             go to state 66
+    term             go to state 67
+    fac              go to state 68
+
+
+State 177
+
+   45 switchhalfblock: switchhalfblock defaultbody newlines '{' . lines '}' newlines
+
+    VAR        shift, and go to state 33
+    INT        shift, and go to state 34
+    FLOAT      shift, and go to state 35
+    IF         shift, and go to state 36
+    FOR        shift, and go to state 37
+    SWITCH     shift, and go to state 38
+    PRINTLN    shift, and go to state 39
+    PRINT      shift, and go to state 40
+    RETURN     shift, and go to state 41
+    INT_LIT    shift, and go to state 42
+    FLOAT_LIT  shift, and go to state 43
+    BOOL_LIT   shift, and go to state 44
+    IDENT      shift, and go to state 45
+    '('        shift, and go to state 46
+    '+'        shift, and go to state 47
+    '-'        shift, and go to state 48
+    '!'        shift, and go to state 49
+
+    '{'       reduce using rule 36 (blockbody)
+    $default  reduce using rule 63 (line)
+
+    for              go to state 50
+    ident            go to state 51
+    lines            go to state 184
+    int_lit          go to state 53
+    float_lit        go to state 54
+    bool_lit         go to state 55
+    blockbody        go to state 56
+    forbody          go to state 57
+    ifbody           go to state 58
+    switchhalfblock  go to state 59
+    line             go to state 60
+    equation         go to state 61
+    lor_expr         go to state 62
+    land_expr        go to state 63
+    equ_expr         go to state 64
+    cmp_expr         go to state 65
+    expr             go to state 66
+    term             go to state 67
+    fac              go to state 68
+
+
+State 178
+
+   50 line: VAR IDENT STRING '=' string_lit .
+
+    $default  reduce using rule 50 (line)
+
+
+State 179
+
+   37 dec_assign: '=' lor_expr .
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+
+    $default  reduce using rule 37 (dec_assign)
+
+
+State 180
+
+   20 paras: paras ',' lor_expr .
+   72 lor_expr: lor_expr . LOR land_expr
+
+    LOR  shift, and go to state 107
+
+    $default  reduce using rule 20 (paras)
+
+
+State 181
+
+   58 line: forbody newlines '{' lines '}' .
+
+    $default  reduce using rule 58 (line)
+
+
+State 182
+
+   57 line: ifbody newlines '{' lines '}' .
+
+    $default  reduce using rule 57 (line)
+
+
+State 183
+
+   44 switchhalfblock: switchhalfblock casebody newlines '{' lines . '}' newlines
+
+    '}'  shift, and go to state 185
+
+
+State 184
+
+   45 switchhalfblock: switchhalfblock defaultbody newlines '{' lines . '}' newlines
+
+    '}'  shift, and go to state 186
+
+
+State 185
+
+   44 switchhalfblock: switchhalfblock casebody newlines '{' lines '}' . newlines
+
+    NEWLINE  shift, and go to state 1
+
+    $default  reduce using rule 13 (newlines)
+
+    newline   go to state 2
+    newlines  go to state 187
+
+
+State 186
+
+   45 switchhalfblock: switchhalfblock defaultbody newlines '{' lines '}' . newlines
+
+    NEWLINE  shift, and go to state 1
+
+    $default  reduce using rule 13 (newlines)
+
+    newline   go to state 2
+    newlines  go to state 188
+
+
+State 187
+
+   44 switchhalfblock: switchhalfblock casebody newlines '{' lines '}' newlines .
+
+    $default  reduce using rule 44 (switchhalfblock)
+
+
+State 188
+
+   45 switchhalfblock: switchhalfblock defaultbody newlines '{' lines '}' newlines .
+
+    $default  reduce using rule 45 (switchhalfblock)
