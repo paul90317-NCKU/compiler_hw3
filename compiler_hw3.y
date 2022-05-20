@@ -84,7 +84,8 @@
 %type <type> type nonvoid_type exprable_type
 %type <func_sig> paradec paradecs paradecstart
 %type <name> funchead
-%type <label> for ifbody
+%type <label> for ifbody ifblockelsebody
+
 %type <for_labels> forbody
 %type <case_data> casebody defaultbody
 %type <switch_data> switchhalfblock
@@ -233,7 +234,7 @@ funchead
 funcbody
     : funchead '(' paradecstart ')' type {
         if(strcmp($1,"main")==0&&strcmp($3,"")==0&&$5==type_void){
-            main_method_begin($1,$3,$5);
+            main_method_begin();
         }else{
             method_begin($1,$3,$5);
         }
@@ -269,6 +270,14 @@ ifbody
         create_symbol();
     }
 ;
+ifblockelsebody
+    : ifbody newlines '{' lines '}' ELSE {
+        $$=label_cnt++;
+        dump_symbol();
+        CODEGEN("goto Label%d",$$);
+        LABELGEN($1);
+        create_symbol();
+    }
 casebody
     : CASE case_lit ':' {
         $$.key=$2;
@@ -368,6 +377,10 @@ line
         print_post($3);
     }
     | ifbody newlines '{' lines '}' {
+        LABELGEN($1);
+        dump_symbol();
+    }
+    | ifblockelsebody newlines '{' lines '}' {
         LABELGEN($1);
         dump_symbol();
     }

@@ -30,4 +30,5 @@ extern int scope_level;
 extern int yylineno;
 extern bool g_has_error;
 extern int reduce_line;
+
 #endif /* COMPILER_HW_COMMON_H */
